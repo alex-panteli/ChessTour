@@ -17,23 +17,32 @@ window.TastypieCollection = Backbone.Collection.extend({
 });
 
 var Tournament = TastypieModel.extend({
-	urlRoot = '/api/tournament',
-	defaults: {
-		name: 'New tournament',
-		country: 'US'
-	}
+	urlRoot : '/api/scoring/tournament'
 });
 
 var TournamentList = TastypieCollection.extend({
 	model: Tournament,
-	url: '/api/tournament/'
-	initialize: function(){
-		this.fetch();
-	})
-})
+	url: '/api/scoring/tournament/'
+});
 
+
+var Score = TastypieModel.extend({
+	urlRoot: '/api/scoring/score'
+});
+
+var ScoreList = TastypieCollection.extend({
+	model: Score,
+	url: function() {
+		return '/api/scoring/score/?tournament__id=' + this.options.tournament_id;
+	},
+	
+	initialize: function(options) {
+		this.options = options;
+	}
+});
+/*
 var Match = TastypieModel.extend({
-	urlRoot: '/api/match',
+	urlRoot: '/api/scoring/match',
 	defaults: {
 		round: '',
 		participant_one: '',
@@ -50,30 +59,12 @@ var Match = TastypieModel.extend({
 var RoundMatchList = TastypieCollection.extend({
 	model : Match,
 	url: function() {
-		return '/api/match/?round=' + this.options.round_id;
+		return '/api/scoring/match/?round=' + this.options.round_id;
 	}
 	initialize: function(){
 		this.fetch();
 	})
 	
 })
-		
-var Score = TastypieModel.extend({
-	urlRoot: '/api/score',
-	defaults: {
-		participant : '',
-		tournament: '',
-		score: ''
-	}
-})
 
-var ScoreList = TastypieCollection.extend({
-	model: Score,
-		url: function() {
-		return '/api/score/?tournament=' + this.options.tournament_id;
-	}
-	initialize: function(){
-		this.fetch();
-	})
-})
-
+*/
