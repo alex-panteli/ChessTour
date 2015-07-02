@@ -7,7 +7,7 @@ from django_countries.fields import CountryField
 
 class RefereeUserProfile(models.model):
 	user = models.ForeignKey(User, unique=True)
-    picture = models.ImageField(upload_to='judges')
+    picture = models.ImageField(upload_to='referees',default='referees/default.jpg')
 	def __unicode__(self):
         return u'{} {}'.format(user.first_name, user.last_name)
 	
@@ -17,7 +17,7 @@ class Participant(models.model):
 	full_name = models.CharField(max_length=70)
 	country = CountryField()
 	elo_rating = models.IntegerField()
-	picture = models.ImageField(upload_to='participants')
+	picture = models.ImageField(upload_to='participants',default='participants/default.jpg')
 	
 	def __unicode__(self):
         return u'{} - {} [{:,}]'.format(self.full_name, self.country, self.elo_rating)
@@ -51,4 +51,10 @@ class Match(models.model):
 	
 	def __unicode__(self):
         return u'{} vs {} : {}'.format(participant_one, participant_two, result)
+		
+class Score(models.model):
+	participant = models.ForeignKey(Participant)
+	tournament = models.ForeignKey(Tournament)
+	score = models.FloatField()
+	rating_delta = models.IntegerField()
 	

@@ -31,6 +31,7 @@ class ParticipantResource(ModelResource):
         queryset = Round.objects.all()
         allowed_methods = ['get']
 
+#If there is already a result it cannot be changed via this interface
 class MatchResource(ModelResource):
 	class Meta:
         always_return_data = True
