@@ -26,7 +26,9 @@ var AppView = Backbone.View.extend({
 	changeTournament : function(tournId){
 		console.log('displaying scoreboard for' + tournId);
 		app.scores = new ScoreList({tournament_id : tournId});
+		app.matches = new RoundMatchList({round_id : 1})
 		this.scoreview = new ScoreBoardView({collection : app.scores});
+		this.roundview = new RoundView({collection : app.matches});
 	}
 })
 
@@ -35,7 +37,7 @@ var TournamentsView = Backbone.View.extend({
 
   initialize: function(){
     this.listenTo(app.tournaments,'update', this.render);
-	this.listenTo(app.tournaments,'sync', this.render);
+	//this.listenTo(app.tournaments,'sync', this.render);
   },
   
   template: _.template($("#tournament_select_template").html()),
@@ -54,7 +56,7 @@ var ScoreBoardView = Backbone.View.extend({
   
   initialize: function(){
 	this.listenTo(this.collection,'update', this.render);
-	this.listenTo(this.collection,'sync', this.render);
+	//this.listenTo(this.collection,'sync', this.render);
 	this.collection.fetch();
 	
   },
@@ -75,12 +77,12 @@ var ScoreBoardView = Backbone.View.extend({
 
 var ScoreView = Backbone.View.extend({
 	tagName: 'li',
-	
+	className: 'media',
 	template: _.template($("#score_template").html()),
 	
 	initialize: function(){
 		this.listenTo(this.model,'change', this.render);
-		this.listenTo(this.model,'sync', this.render);
+		//this.listenTo(this.model,'sync', this.render);
 	},
 	
 	render: function(){
@@ -92,11 +94,37 @@ var ScoreView = Backbone.View.extend({
     }
 });
 
+var RoundView =  Backbone.View.extend({
+	el: '#round_container',
+	
+	initialize: function(){
+			this.listenTo(this.collection,'update', this.render);
+			//this.listenTo(this.collection,'sync', this.render);
+			this.collection.fetch();
+	},
+	
+	template: _.template($("#round_template").html()),
+	
+	render: function(){
+		var $el = $(this.el);
+		console.log('rendering matchboard');
+		$el.html('');
+		$el.html(this.template({}));
+		var matchhtml = '';
+		this.collection.each(function(listItem) {
+			var item;
+			item = new MatchView({ model: listItem });
+			$('#match-list-container').append(item.render().el);
+		});
+		
+		return this;
+	}
+});
 
 
 var MatchView = Backbone.View.extend({
   tagName: 'div',
-  className: 'col-xs-12 col-sm-6 col-md-4',
+  className: 'row',
   
   events: {
       "click input[type=button]": "saveResult"
@@ -106,20 +134,24 @@ var MatchView = Backbone.View.extend({
       // Button clicked, you can access the element that was clicked with event.currentTarget
       alert( "Search for " + $("#search_input").val() );
 	  this.model.save();
-  }
+  },
   
    initialize: function(){
 		this.listenTo(this.model,'change', this.render);
-		this.listenTo(this.model,'sync', this.render);
+		//this.listenTo(this.model,'sync', this.render);
+		this.listenTo(this.model,"change:result", function(model){
+		  model.save();
+		});
    },
+   
+   template: _.template($("#match_template").html()),
   
    render: function(){
-	  var $el = $(this.el);
-      $el.data('listId', this.model.get('id'));
-      var template = _.template( $("#match_template").html(), this.model.toJSON() );
-      // Load the compiled HTML into the Backbone "el"
-      $el.html( template );
-	  return this;
+	  	var $el = $(this.el);
+		console.log('rendering' + this.model.toJSON());
+        $el.html(this.template(this.model.toJSON()));
+		
+        return this;
   }
 });
 
@@ -137,19 +169,5 @@ var TournamentView = Backbone.View.extend({
       $el.html( this.model.get('name') );
 	  return this;
   },
-});
-
-var RoundView =  Backbone.View.extend({
-	el: '#round_container',
-  initialize: function(){
-    this.render();
-	this.collection = round matches?
-  }
-  render: function(){
-      // Compile the template using underscore
-      var template = _.template( $("#round_template").html(), {} );
-      // Load the compiled HTML into the Backbone "el"
-      this.$el.html( template );
-  }
 });
 */

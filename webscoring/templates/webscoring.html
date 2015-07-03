@@ -8,40 +8,94 @@
 {% block all_content %}
 
 <script type="text/template" id="score_template">
-			<label><%= score %> <%= rating_delta %></label>
+			<div class="media-body">
+				<h4 class="media-heading"><%= score %> </h4>
+				<%= participant.full_name %> (<%= participant.country %>)
+			</div>
+			<div class="media-right media-middle">
+				<a href="#">
+					<img class="media-object hidden-xs" src="<%= participant.picture %>" alt="<%= participant.full_name %>" height="64" width="64">
+				</a>
+			</div>
+			<hr>
 </script>
 
 <script type="text/template" id="tournament_select_template">
-	<select id="tournament-selector">
+
+	<select id="tournament-selector" class="form-control">
 		 <% _.each(tournaments, function(tournament) {%>
 			<option value="<%= tournament.id %>"><%= tournament.name %> <%= tournament.date %></option>
 		<% }); %>
 	</select>
+
 </script>
 
 <script type="text/template" id="round_template">
 			<div class="row">
+						<div class="panel panel-default">
+						<div class="panel-heading"><h3>Round</h3></div>
+						<div class="panel-body" id="match-list-container">
+						</div>
+						</div>
 			</div>
 </script>
 
 <script type="text/template" id="match_template">
-			
+		<div class="col-xs-5">
+		<div class="media">
+			<div class="media-left media-middle">
+				<a href="#">
+					<img class="media-object hidden-xs" src="<%= participant_one.picture %>" alt="<%= participant_one.full_name %>" height="64" width="64">
+				</a>
+			</div>
+			<div class="media-body">
+				<h4 class="media-heading"><%= participant_one.full_name %> (<%= participant_one.country %>)</h4>
+			</div>
+		</div>
+		</div>
+		
+		<div class="col-xs-2"> <h2>VS</h2> </div>
+
+		<div class="col-xs-5">
+		<div class="media">
+			<div class="media-body">
+				<h4 class="media-heading"><%= participant_two.full_name %> (<%= participant_two.country %>)</h4>
+			</div>
+			<div class="media-right media-middle">
+				<a href="#">
+					<img class="media-object hidden-xs" src="<%= participant_two.picture %>" alt="<%= participant_two.full_name %>" height="64" width="64">
+				</a>
+			</div>
+		</div>
+		</div>
 </script>
 
 <div class="container" id="app_container">
-	
-	<div class="row no-gutter">
+	<div class="row">
+	<div class="panel panel-default">
+	<div class="panel-heading"><h3>Tournament</h3></div>
+	<div class="panel-body">
 		<div class="col-xs-12" id="tournament_container">
 			<option>Loading tournaments</option>
 		</div>
-	<div>
-	<div class="row no-gutter">
+	</div>
+	</div>
+	</div>
+	
+	<div class="row">
 		<div class="col-xs-12 col-sm-9" id="round_container">
 			Loading round...
 		</div>
-		<div class="col-xs-12 col-sm-3" id="scoreboard_container">
-			Loading scoreboard...
+		
+		<div class="col-xs-12 col-sm-3">
+		<div class="panel panel-default">
+		<div class="panel-heading"><h3>Scoreboard</h3></div>
+		<div class="panel-body">		
+			<ul class="media-list" id="scoreboard_container">Loading scoreboard...</ul>
 		</div>
-	<div>
+		</div>
+		</div>
+	</div>
+</div>
 
 {% endblock %}

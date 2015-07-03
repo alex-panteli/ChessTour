@@ -51,7 +51,7 @@ class Match(models.Model):
     result = models.CharField(max_length=1, choices=RESULT_CHOICES,blank=True)
     
     def __unicode__(self):
-        return u'{} vs {} : {}'.format(participant_one, participant_two, result)
+        return u'{} vs {} : {}'.format(self.participant_one, self.participant_two, self.result)
         
 class Score(models.Model):
     participant = models.ForeignKey(Participant)

@@ -29,12 +29,25 @@ class AnonymousGetAuthorization(DjangoAuthorization):
 class ParticipantResource(ModelResource):
     class Meta:
         always_return_data = True
-        queryset = Round.objects.all()
+        queryset = Participant.objects.all()
         allowed_methods = ['get']
         resource_name = 'participant'
+		
+class RoundResource(ModelResource):
+    class Meta:
+        always_return_data = True
+        queryset = Round.objects.all()
+        allowed_methods = ['get']
+        resource_name = 'round'
+        filtering = {
+            'id': ['exact'],
+        }
 
 #If there is already a result it cannot be changed via this interface
 class MatchResource(ModelResource):
+    round = fields.ToOneField(RoundResource, 'round')
+    participant_one = fields.ToOneField(ParticipantResource, 'participant_one',full=True)
+    participant_two = fields.ToOneField(ParticipantResource, 'participant_two',full=True)
     class Meta:
         always_return_data = True
         queryset = Match.objects.all()
@@ -42,13 +55,10 @@ class MatchResource(ModelResource):
         authorization = AnonymousGetAuthorization()
         allowed_methods = ['get','put']
         resource_name = 'match'
+        filtering = {
+            'round': ALL_WITH_RELATIONS,
+        }
         
-class RoundResource(ModelResource):
-    class Meta:
-        always_return_data = True
-        queryset = Round.objects.all()
-        allowed_methods = ['get']
-        resource_name = 'round'
         
 class TournamentResource(ModelResource):
     class Meta:
@@ -62,7 +72,7 @@ class TournamentResource(ModelResource):
         
 class ScoreResource(ModelResource):
     tournament = fields.ToOneField(TournamentResource, 'tournament')
-    participant = fields.ToOneField(ParticipantResource, 'participant')
+    participant = fields.ToOneField(ParticipantResource, 'participant',full=True)
     class Meta:
         always_return_data = True
         queryset = Score.objects.all()

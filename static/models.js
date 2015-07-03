@@ -38,33 +38,23 @@ var ScoreList = TastypieCollection.extend({
 	
 	initialize: function(options) {
 		this.options = options;
+	},
+	
+	comparator: function( item ){
+		return( -item.get( 'score' ) );
 	}
 });
-/*
+
 var Match = TastypieModel.extend({
-	urlRoot: '/api/scoring/match',
-	defaults: {
-		round: '',
-		participant_one: '',
-		participant_two: '',
-		result: ''
-	},
-	initialize: function(){
-		this.on("change:result", function(model){
-		  model.save();
-		});
-	}
+	urlRoot: '/api/scoring/match'
 });
 
 var RoundMatchList = TastypieCollection.extend({
 	model : Match,
 	url: function() {
-		return '/api/scoring/match/?round=' + this.options.round_id;
-	}
-	initialize: function(){
-		this.fetch();
-	})
-	
+		return '/api/scoring/match/?round__id=' + this.options.round_id;
+	},
+	initialize: function(options) {
+		this.options = options;
+	}	
 })
-
-*/

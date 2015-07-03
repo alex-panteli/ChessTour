@@ -1,5 +1,5 @@
 
-from core.models import Participant,Score,Tournament,RefereeUserProfile
+from core.models import Participant,Score,Tournament,RefereeUserProfile,Match,Round
 from django.contrib.auth.models import User
 import datetime
 
@@ -23,3 +23,10 @@ Score.objects.create(tournament = newtour2, participant = one, score=10.5, ratin
 Score.objects.create(tournament = newtour2, participant = two, score=9.5, rating_delta=0)
 Score.objects.create(tournament = newtour2, participant = three, score=8.5, rating_delta=0)
 Score.objects.create(tournament = newtour2, participant = four, score=7.5, rating_delta=0)
+
+newround = Round.objects.create(tournament = newtour2, round_number=5)
+Match.objects.create(round = newround, participant_one = one, participant_two = two )
+Match.objects.create(round = newround, participant_one = two, participant_two = three )
+Match.objects.create(round = newround, participant_one = one, participant_two = three )
+Match.objects.create(round = newround, participant_one = two, participant_two = four )
+Match.objects.create(round = newround, participant_one = three, participant_two = four )
