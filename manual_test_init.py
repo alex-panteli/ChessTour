@@ -24,9 +24,20 @@ Score.objects.create(tournament = newtour2, participant = two, score=9.5, rating
 Score.objects.create(tournament = newtour2, participant = three, score=8.5, rating_delta=0)
 Score.objects.create(tournament = newtour2, participant = four, score=7.5, rating_delta=0)
 
-newround = Round.objects.create(tournament = newtour2, round_number=5)
+newround = Round.objects.create(tournament = newtour, round_number=1,is_current=True)
+Match.objects.create(round = newround, participant_one = one, participant_two = two )
+Match.objects.create(round = newround, participant_one = two, participant_two = three )
+Match.objects.create(round = newround, participant_one = one, participant_two = three )
+
+newround = Round.objects.create(tournament = newtour2, round_number=1,is_current=True)
 Match.objects.create(round = newround, participant_one = one, participant_two = two )
 Match.objects.create(round = newround, participant_one = two, participant_two = three )
 Match.objects.create(round = newround, participant_one = one, participant_two = three )
 Match.objects.create(round = newround, participant_one = two, participant_two = four )
 Match.objects.create(round = newround, participant_one = three, participant_two = four )
+
+newround2 = Round.objects.create(tournament = newtour2, round_number=2)
+Match.objects.create(round = newround2, participant_one = one, participant_two = two )
+Match.objects.create(round = newround2, participant_one = two, participant_two = three )
+Match.objects.create(round = newround2, participant_one = one, participant_two = three )
+Match.objects.create(round = newround2, participant_one = two, participant_two = four )

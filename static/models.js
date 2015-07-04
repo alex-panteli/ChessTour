@@ -15,6 +15,9 @@ window.TastypieCollection = Backbone.Collection.extend({
         return response.objects || response;
     }
 });
+var Referee=Backbone.Model.extend({
+    url: 'api/scoring/referee/login'
+}); 
 
 var Tournament = TastypieModel.extend({
 	urlRoot : '/api/scoring/tournament'
@@ -47,6 +50,20 @@ var ScoreList = TastypieCollection.extend({
 
 var Match = TastypieModel.extend({
 	urlRoot: '/api/scoring/match'
+});
+
+var Round = TastypieModel.extend({
+	urlRoot: '/api/scoring/round'
+});
+
+var RoundList = TastypieCollection.extend({
+	url: function() {
+		//return '/api/scoring/round/?tournament__id=' + this.options.tournament_id + '&is_current=' + this.options.get_current;
+		return '/api/scoring/round/?tournament__id=' + this.options.tournament_id;
+	},
+	initialize: function(options) {
+		this.options = options;
+	}
 });
 
 var RoundMatchList = TastypieCollection.extend({

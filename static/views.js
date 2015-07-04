@@ -20,17 +20,41 @@ var AppView = Backbone.View.extend({
 				var selectedTournament = app.tournaments.at(0).get('id');
 				self.changeTournament(selectedTournament);
 			}
-		});	
+		});
+		app.loginView = new LoginView();
 	},
 	
 	changeTournament : function(tournId){
 		console.log('displaying scoreboard for' + tournId);
 		app.scores = new ScoreList({tournament_id : tournId});
-		app.matches = new RoundMatchList({round_id : 1})
+		app.rounds = new RoundList({tournament_id : tournId});
+		if(this.scoreview)
+			this.scoreview.clean();
+		if(this.roundview)
+			this.roundview.clean();
 		this.scoreview = new ScoreBoardView({collection : app.scores});
-		this.roundview = new RoundView({collection : app.matches});
+		this.roundview = new RoundView({collection : app.rounds});
 	}
-})
+});
+
+var LoginView = Backbone.View.extend({
+	el: '#login-form',
+	
+	events: {
+      "click button[id=login-btn]": "login"
+	},
+	
+	login: function(){
+		var user = new Referee();
+		user.credentials = {
+			username: 'username',
+			password: 'password'
+		};
+
+		user.save({success : this.renderLogged , failure : this.renderFailure});
+	}
+	
+});
 
 var TournamentsView = Backbone.View.extend({
   el: '#tournament_container',
@@ -72,6 +96,11 @@ var ScoreBoardView = Backbone.View.extend({
 	});
 
 	return this;
+  },
+  
+  clean: function(){
+	  this.undelegateEvents();
+	  this.stopListening();
   }
 });
 
@@ -97,10 +126,52 @@ var ScoreView = Backbone.View.extend({
 var RoundView =  Backbone.View.extend({
 	el: '#round_container',
 	
+	events: {
+      "click button[id=prev-round-btn]": "prevRound",
+	  "click button[id=next-round-btn]": "nextRound"
+	},
+	
+	prevRound: function(){
+		this.changeRound(-1);
+	},
+	
+	nextRound: function(){
+		this.changeRound(1);
+	},
+	
+	changeRound: function(increment)
+	{
+		currentRound = this.current.get("round_number");
+		maxRoundNum = this.current.get("max_round");
+		if ( (currentRound + increment <= maxRoundNum) && (currentRound + increment >= 1))
+		{
+			this.current = (this.collection.where({ round_number : currentRound + increment }))[0];
+			this.current.set({max_round : maxRoundNum});
+			this.loadMatches(this.current.get('id'));
+		}
+	},
+	
 	initialize: function(){
-			this.listenTo(this.collection,'update', this.render);
+			this.listenTo(this.collection,'update', this.loadRound);
 			//this.listenTo(this.collection,'sync', this.render);
 			this.collection.fetch();
+	},
+	
+	loadRound: function()
+	{
+		this.current = (this.collection.where({ is_current : true }))[0];
+		var maxRound = this.collection.max(function(model) {
+			return model.get("round_number");
+		});
+		this.current.set({max_round : maxRound.get('round_number')});
+		this.loadMatches(this.current.get('id'));
+	},
+	
+	loadMatches: function(roundId)
+	{
+		this.matches = new RoundMatchList({round_id : roundId});
+		this.listenTo(this.matches,'update', this.render);
+		this.matches.fetch();
 	},
 	
 	template: _.template($("#round_template").html()),
@@ -109,15 +180,20 @@ var RoundView =  Backbone.View.extend({
 		var $el = $(this.el);
 		console.log('rendering matchboard');
 		$el.html('');
-		$el.html(this.template({}));
+		$el.html(this.template(this.current.toJSON()));
 		var matchhtml = '';
-		this.collection.each(function(listItem) {
+		this.matches.each(function(listItem) {
 			var item;
 			item = new MatchView({ model: listItem });
 			$('#match-list-container').append(item.render().el);
 		});
 		
 		return this;
+	},
+	
+	clean: function(){
+	  this.undelegateEvents();
+	  this.stopListening();
 	}
 });
 
@@ -148,7 +224,6 @@ var MatchView = Backbone.View.extend({
   
    render: function(){
 	  	var $el = $(this.el);
-		console.log('rendering' + this.model.toJSON());
         $el.html(this.template(this.model.toJSON()));
 		
         return this;

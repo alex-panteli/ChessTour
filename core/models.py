@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 #
 
 class RefereeUserProfile(models.Model):
-    user = models.ForeignKey(User, unique=True)
+    user = models.OneToOneField(User,related_name="ref_profile")
     picture = models.ImageField(upload_to='referees',default='referees/default.png')
     def __unicode__(self):
         return u'{} {}'.format(user.first_name, user.last_name)
@@ -35,6 +35,7 @@ class Tournament(models.Model):
 class Round(models.Model):
     tournament = models.ForeignKey(Tournament)
     round_number = models.IntegerField()
+    is_current = models.BooleanField(default=False)
     def __unicode__(self):
         toString = u'Round {} of {} :'.format(self.round_number,self.tournament)
         toString.append('\n'.join(match_set.all()))
