@@ -15,7 +15,7 @@ window.TastypieCollection = Backbone.Collection.extend({
         return response.objects || response;
     }
 });
-var Referee=Backbone.Model.extend({
+var Referee=TastypieCollection.extend({
     url: 'api/scoring/referee/login'
 }); 
 

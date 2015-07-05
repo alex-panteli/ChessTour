@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from tastypie.api import Api
-from webscoring.api.resources import ParticipantResource,MatchResource,RoundResource,TournamentResource,ScoreResource
+from webscoring.api.resources import ParticipantResource,MatchResource,RoundResource,TournamentResource,ScoreResource,RefereeLoginResource
 from webscoring.views import AppMainPageView
 from django.conf import settings
 from django.conf.urls.static import static
@@ -27,6 +27,7 @@ score_api.register(MatchResource())
 score_api.register(RoundResource())
 score_api.register(TournamentResource())
 score_api.register(ScoreResource())
+score_api.register(RefereeLoginResource())
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),

@@ -59,39 +59,102 @@
 </script>
 
 <script type="text/template" id="match_template">
+	<div class="panel panel-default">
+	<div class="panel-heading">
+	<div class="row">
 		<div class="col-xs-5">
 		<div class="media">
 			<div class="media-left media-middle">
 				<a href="#">
 					<img class="media-object hidden-xs" src="<%= participant_one.picture %>" alt="<%= participant_one.full_name %>" height="64" width="64">
+					<% if (result === "1") { %>
+						<span class="label label-success justified">Winner</span>
+					<% } else if (result === "X") { %>
+						<span class="label label-warning justified">Draw</span>
+					<% } %>
 				</a>
 			</div>
 			<div class="media-body">
-				<h4 class="media-heading"><%= participant_one.full_name %> (<%= participant_one.country %>)</h4>
+				<h4><%= participant_one.full_name %> (<%= participant_one.country %>)</h4>
 			</div>
 		</div>
 		</div>
 		
-		<div class="col-xs-2"> <h2>VS</h2> </div>
+		<div class="col-xs-2 justified"> <h2>VS</h2> </div>
 
 		<div class="col-xs-5">
 		<div class="media">
-			<div class="media-body">
-				<h4 class="media-heading"><%= participant_two.full_name %> (<%= participant_two.country %>)</h4>
+			<div class="media-body text-right">
+				<h4><%= participant_two.full_name %> (<%= participant_two.country %>)</h4>
 			</div>
 			<div class="media-right media-middle">
 				<a href="#">
 					<img class="media-object hidden-xs" src="<%= participant_two.picture %>" alt="<%= participant_two.full_name %>" height="64" width="64">
+					<% if (result === "2") { %>
+						<span class="label label-success justified">Winner</span>
+					<% } else if (result === "X") { %>
+						<span class="label label-warning justified">Draw</span>
+					<% } %>
 				</a>
 			</div>
 		</div>
+		</div>
+		
+		
+	</div>
+	</div>
+	<% if (logged && !result) { %>
+	<div class="panel-body">
+		<div class="row no-gutters vertical-align">
+		<div class="col-xs-12 col-sm-1">
+		Result: 
+		</div>
+		<div class="col-xs-12 col-sm-6">
+		<select id="result-selector-<%= id %>" class="form-control">
+			<option value="1">Winner : <%= participant_one.full_name %></option>
+			<option value="2">Winner : <%= participant_two.full_name %></option>
+			<option value="X">Match resulted in a draw</option>
+		</select>
+		</div>
+		<div class="col-xs-6 col-sm-1">
+		<button type="button" id="login-btn" class="btn btn-default btn-md"><i class="fa fa-floppy-o"></i></i>&nbsp;Save</button>
+		</div>
+	<div>	
+	<% } %>
+	
+	</div>
+		
+		
+</script>
+
+<script type="text/template" id="logged-in_template">
+		<div class="col-xs-12 col-md-5">
+		<h3>ChessTour</h3>
+		</div>
+		<div class="col-xs-12 col-sm-4 col-md-3">
+			Logged in as:  <%= user.username %>
 		</div>
 </script>
 
 <div class="container" id="app_container">
 	<div class="row">
 	<div class="panel panel-default">
-	<div class="panel-heading"><h3>Tournament</h3></div>
+	<div class="panel-heading">
+	<div class="row no-gutters vertical-align " id="login-container">
+		<div class="col-xs-12 col-md-5">
+		<h3>ChessTour</h3>
+		</div>
+		<div class="col-xs-12 col-sm-4 col-md-3">
+		<input type="text" id="username-field" class="form-control" placeholder="Username" required>
+		</div>
+		<div class="col-xs-12 col-sm-4 col-md-3">
+		<input type="password" id="password-field" class="form-control" placeholder="Password" required>
+		</div>
+		<div class="col-xs-1 col-md-1">
+		<button type="button" id="login-btn" class="btn btn-default btn-md"><i class="fa  fa-sign-in"></i></i>&nbsp;Login</button>
+		</div>
+	</div>
+	</div>
 	<div class="panel-body">
 		<div class="col-xs-12" id="tournament_container">
 			<option>Loading tournaments</option>
