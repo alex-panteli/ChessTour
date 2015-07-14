@@ -1,8 +1,9 @@
 from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
 from tastypie.authentication import BasicAuthentication
-from tastypie.authorization import DjangoAuthorization
+from tastypie.authorization import DjangoAuthorization,Authorization
 from tastypie import fields, utils
 from core.models import Participant,Match,Round,Tournament,Score,RefereeUserProfile
+from core.authorization import GuardianAuthorization
 from django.contrib.auth.models import User
 
 
@@ -25,7 +26,7 @@ class AnonymousGetAuthorization(DjangoAuthorization):
         if request.method == 'GET':
             return True
         else:
-            return super(AnonymousGetAuthorization, self).is_authorized(request, object)
+            return True #request.user.has_perm('set_result', object)
 
 class UserResource(ModelResource):
     class Meta:
@@ -64,9 +65,12 @@ class TournamentResource(ModelResource):
         }           
 
 class ParticipantResource(ModelResource):
+    def can_update(self):
+        return False
     class Meta:
         always_return_data = True
         queryset = Participant.objects.all()
+        authorization = Authorization()
         allowed_methods = ['get']
         resource_name = 'participant'
         
@@ -93,7 +97,10 @@ class MatchResource(ModelResource):
         always_return_data = True
         queryset = Match.objects.all()
         authentication = AnonymousGetAuthentication()
-        authorization = AnonymousGetAuthorization()
+        authorization = GuardianAuthorization(
+            view_permission_code = 'view_result', 
+            update_permission_code = 'set_result' 
+            )
         allowed_methods = ['get','put']
         resource_name = 'match'
         filtering = {

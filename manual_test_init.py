@@ -1,6 +1,7 @@
 
 from core.models import Participant,Score,Tournament,RefereeUserProfile,Match,Round
 from django.contrib.auth.models import User
+from guardian.shortcuts import assign_perm
 import datetime
 
 one = Participant.objects.create(full_name='Magnus Carlsen', country="NO", elo_rating=2853)
@@ -41,3 +42,7 @@ Match.objects.create(round = newround2, participant_one = one, participant_two =
 Match.objects.create(round = newround2, participant_one = two, participant_two = three )
 Match.objects.create(round = newround2, participant_one = one, participant_two = three )
 Match.objects.create(round = newround2, participant_one = two, participant_two = four )
+anonymous_user = User.objects.get(id=-1)
+[assign_perm('set_result', referee_user, match) for match in Match.objects.all()]
+[assign_perm('view_result', referee_user, match) for match in Match.objects.all()]
+[assign_perm('view_result', anonymous_user, match) for match in Match.objects.all()]

@@ -41,6 +41,13 @@ class Round(models.Model):
         toString.append('\n'.join(match_set.all()))
     
 class Match(models.Model):
+
+    class Meta:
+            permissions = (
+                ('set_result', 'Set result'),
+				('view_result', 'View result'),
+            )
+            
     RESULT_CHOICES = (
         ('1' , 'One'),
         ('X' , 'Draw'),

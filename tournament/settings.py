@@ -35,6 +35,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 AUTH_PROFILE_MODULE = 'accounts.JudgeUserProfile'
+ANONYMOUS_USER_ID = -1
 
 
 # Application definition
@@ -52,6 +53,7 @@ INSTALLED_APPS = (
 	'sekizai',
 	'core',
 	'webscoring',
+	'guardian',
 	
 )
 
@@ -63,6 +65,11 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+)
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'guardian.backends.ObjectPermissionBackend',
 )
 
 ROOT_URLCONF = 'tournament.urls'

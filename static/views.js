@@ -33,7 +33,7 @@ var AppView = Backbone.View.extend({
 		if(this.roundview)
 			this.roundview.clean();
 		this.scoreview = new ScoreBoardView({collection : app.scores});
-		this.roundview = new RoundView({collection : app.rounds});
+		app.roundview = new RoundView({collection : app.rounds});
 	}
 });
 
@@ -65,13 +65,23 @@ var LoginView = Backbone.View.extend({
 						 error : this.renderFailure});
 	},
 	
+	isAuthenticated: function() {
+		var loggedUser = this.getUser();
+		var selectedTournament = app.tournaments.get(app.scores.options.tournament_id);
+		if(loggedUser && (selectedTournament.get('referee').id == loggedUser.get('id')))
+		{
+			return true;
+		}
+		return false;
+	},
+	
 	success_template : _.template($("#logged-in_template").html()),
 	
 	renderLogged: function() {
 		var $el = $(this.el);
 		var userObj = this.user.at(0);
         $el.html(this.success_template(userObj.toJSON()));
-		
+		app.roundview.render();
         return this;
 	},
 	
@@ -234,13 +244,21 @@ var MatchView = Backbone.View.extend({
   className: 'row',
   
   events: {
-      "click input[type=button]": "saveResult"
+      "click button[type=save]": "saveResult"
   },
 
   saveResult: function( event ){
       // Button clicked, you can access the element that was clicked with event.currentTarget
-      alert( "Search for " + $("#search_input").val() );
-	  this.model.save();
+      console.log('saving result');
+	  
+	  if(app.loginView.isAuthenticated())
+	  {
+		    var elName = "#result-selector-" + this.model.get('id');
+			this.model.credentials = app.loginView.user.credentials;
+			console.log($(elName).val());
+			this.model.set({ result :  $(elName).val() });
+	  }
+	  
   },
   
    initialize: function(){
@@ -256,13 +274,7 @@ var MatchView = Backbone.View.extend({
    render: function(){
 	  	var $el = $(this.el);
 		//if logged in and referee id matches tournament referee insert referee from app.loginView 
-		var loggedUser = app.loginView.getUser();
-		var isAuthenticated = false;
-		var selectedTournament = app.tournaments.get(app.scores.options.tournament_id);
-		if(loggedUser && (selectedTournament.get('referee').id == loggedUser.get('id')))
-		{
-			isAuthenticated = true;
-		}
+		var isAuthenticated =  app.loginView.isAuthenticated();
 		this.model.set({ logged : isAuthenticated });
         $el.html(this.template(this.model.toJSON()));
 		
