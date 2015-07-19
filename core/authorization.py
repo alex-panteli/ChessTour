@@ -61,13 +61,8 @@ class GuardianAuthorization(DjangoAuthorization):
             raise Unauthorized("You are not allowed to access that resource.")
 
         checker = ObjectPermissionChecker(bundle.request.user)
-        print permission
-        print bundle.obj
-        print bundle.request.user
         if not checker.has_perm(permission, bundle.obj):
-            print "Raising"
             raise Unauthorized("You are not allowed to access that resource.")
-        print "Returning true"
         return True
 
     def generic_list_check(self, object_list, bundle, permission):

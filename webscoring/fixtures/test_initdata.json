@@ -1,0 +1,787 @@
+
+
+[
+  {
+    "fields": {
+      "model": "logentry",
+      "name": "log entry",
+      "app_label": "admin"
+    },
+    "model": "contenttypes.contenttype",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "model": "permission",
+      "name": "permission",
+      "app_label": "auth"
+    },
+    "model": "contenttypes.contenttype",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "model": "group",
+      "name": "group",
+      "app_label": "auth"
+    },
+    "model": "contenttypes.contenttype",
+    "pk": 3
+  },
+  {
+    "fields": {
+      "model": "user",
+      "name": "user",
+      "app_label": "auth"
+    },
+    "model": "contenttypes.contenttype",
+    "pk": 4
+  },
+  {
+    "fields": {
+      "model": "contenttype",
+      "name": "content type",
+      "app_label": "contenttypes"
+    },
+    "model": "contenttypes.contenttype",
+    "pk": 5
+  },
+  {
+    "fields": {
+      "model": "session",
+      "name": "session",
+      "app_label": "sessions"
+    },
+    "model": "contenttypes.contenttype",
+    "pk": 6
+  },
+  {
+    "fields": {
+      "model": "apiaccess",
+      "name": "api access",
+      "app_label": "tastypie"
+    },
+    "model": "contenttypes.contenttype",
+    "pk": 7
+  },
+  {
+    "fields": {
+      "model": "apikey",
+      "name": "api key",
+      "app_label": "tastypie"
+    },
+    "model": "contenttypes.contenttype",
+    "pk": 8
+  },
+  {
+    "fields": {
+      "model": "refereeuserprofile",
+      "name": "referee user profile",
+      "app_label": "core"
+    },
+    "model": "contenttypes.contenttype",
+    "pk": 9
+  },
+  {
+    "fields": {
+      "model": "participant",
+      "name": "participant",
+      "app_label": "core"
+    },
+    "model": "contenttypes.contenttype",
+    "pk": 10
+  },
+  {
+    "fields": {
+      "model": "tournamentoptions",
+      "name": "tournament options",
+      "app_label": "core"
+    },
+    "model": "contenttypes.contenttype",
+    "pk": 11
+  },
+  {
+    "fields": {
+      "model": "tournament",
+      "name": "tournament",
+      "app_label": "core"
+    },
+    "model": "contenttypes.contenttype",
+    "pk": 12
+  },
+  {
+    "fields": {
+      "model": "round",
+      "name": "round",
+      "app_label": "core"
+    },
+    "model": "contenttypes.contenttype",
+    "pk": 13
+  },
+  {
+    "fields": {
+      "model": "match",
+      "name": "match",
+      "app_label": "core"
+    },
+    "model": "contenttypes.contenttype",
+    "pk": 14
+  },
+  {
+    "fields": {
+      "model": "score",
+      "name": "score",
+      "app_label": "core"
+    },
+    "model": "contenttypes.contenttype",
+    "pk": 15
+  },
+  {
+    "fields": {
+      "model": "userobjectpermission",
+      "name": "user object permission",
+      "app_label": "guardian"
+    },
+    "model": "contenttypes.contenttype",
+    "pk": 16
+  },
+  {
+    "fields": {
+      "model": "groupobjectpermission",
+      "name": "group object permission",
+      "app_label": "guardian"
+    },
+    "model": "contenttypes.contenttype",
+    "pk": 17
+  },
+  {
+    "fields": {
+      "elo_rating": 2853,
+      "country": "NO",
+      "full_name": "Magnus Carlsen",
+      "picture": "participants\/magnus_carlsen.jpg"
+    },
+    "model": "core.participant",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "elo_rating": 2816,
+      "country": "IN",
+      "full_name": "Viswanathan Anand",
+      "picture": "participants\/viswanathan_anand.jpg"
+    },
+    "model": "core.participant",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "elo_rating": 2816,
+      "country": "BG",
+      "full_name": "Veselin Topalov",
+      "picture": "participants\/veselin_topalov.jpg"
+    },
+    "model": "core.participant",
+    "pk": 3
+  },
+  {
+    "fields": {
+      "elo_rating": 2814,
+      "country": "US",
+      "full_name": "Hikaru Nakamura",
+      "picture": "participants\/hikaru_nakamura.jpg"
+    },
+    "model": "core.participant",
+    "pk": 4
+  },
+  {
+    "fields": {
+      "elo_rating": 2797,
+      "country": "US",
+      "full_name": "Fabiano Caruana",
+      "picture": "participants\/fabiano_caruana.jpg"
+    },
+    "model": "core.participant",
+    "pk": 5
+  },
+  {
+    "fields": {
+      "elo_rating": 2791,
+      "country": "NL",
+      "full_name": "Anish Giri",
+      "picture": "participants\/anish_giri.jpg"
+    },
+    "model": "core.participant",
+    "pk": 6
+  },
+  {
+    "fields": {
+      "elo_rating": 2783,
+      "country": "RU",
+      "full_name": "Vladimir Kramnik",
+      "picture": "participants\/vladimir_kramnik.jpg"
+    },
+    "model": "core.participant",
+    "pk": 7
+  },
+  {
+    "fields": {
+      "elo_rating": 2780,
+      "country": "US",
+      "full_name": "Wesley So",
+      "picture": "participants\/wesley_so.jpg"
+    },
+    "model": "core.participant",
+    "pk": 8
+  },
+  {
+    "fields": {
+      "elo_rating": 2771,
+      "country": "RU",
+      "full_name": "Alexander Grischuk",
+      "picture": "participants\/alexander_grischuk.jpg"
+    },
+    "model": "core.participant",
+    "pk": 9
+  },
+  {
+    "fields": {
+      "elo_rating": 2765,
+      "country": "AM",
+      "full_name": "Levon Aronian",
+      "picture": "participants\/levon_aronian.jpg"
+    },
+    "model": "core.participant",
+    "pk": 10
+  },
+  {
+    "fields": {
+      "codename": "add_logentry",
+      "name": "Can add log entry",
+      "content_type": 1
+    },
+    "model": "auth.permission",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "codename": "change_logentry",
+      "name": "Can change log entry",
+      "content_type": 1
+    },
+    "model": "auth.permission",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "codename": "delete_logentry",
+      "name": "Can delete log entry",
+      "content_type": 1
+    },
+    "model": "auth.permission",
+    "pk": 3
+  },
+  {
+    "fields": {
+      "codename": "add_permission",
+      "name": "Can add permission",
+      "content_type": 2
+    },
+    "model": "auth.permission",
+    "pk": 4
+  },
+  {
+    "fields": {
+      "codename": "change_permission",
+      "name": "Can change permission",
+      "content_type": 2
+    },
+    "model": "auth.permission",
+    "pk": 5
+  },
+  {
+    "fields": {
+      "codename": "delete_permission",
+      "name": "Can delete permission",
+      "content_type": 2
+    },
+    "model": "auth.permission",
+    "pk": 6
+  },
+  {
+    "fields": {
+      "codename": "add_group",
+      "name": "Can add group",
+      "content_type": 3
+    },
+    "model": "auth.permission",
+    "pk": 7
+  },
+  {
+    "fields": {
+      "codename": "change_group",
+      "name": "Can change group",
+      "content_type": 3
+    },
+    "model": "auth.permission",
+    "pk": 8
+  },
+  {
+    "fields": {
+      "codename": "delete_group",
+      "name": "Can delete group",
+      "content_type": 3
+    },
+    "model": "auth.permission",
+    "pk": 9
+  },
+  {
+    "fields": {
+      "codename": "add_user",
+      "name": "Can add user",
+      "content_type": 4
+    },
+    "model": "auth.permission",
+    "pk": 10
+  },
+  {
+    "fields": {
+      "codename": "change_user",
+      "name": "Can change user",
+      "content_type": 4
+    },
+    "model": "auth.permission",
+    "pk": 11
+  },
+  {
+    "fields": {
+      "codename": "delete_user",
+      "name": "Can delete user",
+      "content_type": 4
+    },
+    "model": "auth.permission",
+    "pk": 12
+  },
+  {
+    "fields": {
+      "codename": "add_contenttype",
+      "name": "Can add content type",
+      "content_type": 5
+    },
+    "model": "auth.permission",
+    "pk": 13
+  },
+  {
+    "fields": {
+      "codename": "change_contenttype",
+      "name": "Can change content type",
+      "content_type": 5
+    },
+    "model": "auth.permission",
+    "pk": 14
+  },
+  {
+    "fields": {
+      "codename": "delete_contenttype",
+      "name": "Can delete content type",
+      "content_type": 5
+    },
+    "model": "auth.permission",
+    "pk": 15
+  },
+  {
+    "fields": {
+      "codename": "add_session",
+      "name": "Can add session",
+      "content_type": 6
+    },
+    "model": "auth.permission",
+    "pk": 16
+  },
+  {
+    "fields": {
+      "codename": "change_session",
+      "name": "Can change session",
+      "content_type": 6
+    },
+    "model": "auth.permission",
+    "pk": 17
+  },
+  {
+    "fields": {
+      "codename": "delete_session",
+      "name": "Can delete session",
+      "content_type": 6
+    },
+    "model": "auth.permission",
+    "pk": 18
+  },
+  {
+    "fields": {
+      "codename": "add_apiaccess",
+      "name": "Can add api access",
+      "content_type": 7
+    },
+    "model": "auth.permission",
+    "pk": 19
+  },
+  {
+    "fields": {
+      "codename": "change_apiaccess",
+      "name": "Can change api access",
+      "content_type": 7
+    },
+    "model": "auth.permission",
+    "pk": 20
+  },
+  {
+    "fields": {
+      "codename": "delete_apiaccess",
+      "name": "Can delete api access",
+      "content_type": 7
+    },
+    "model": "auth.permission",
+    "pk": 21
+  },
+  {
+    "fields": {
+      "codename": "add_apikey",
+      "name": "Can add api key",
+      "content_type": 8
+    },
+    "model": "auth.permission",
+    "pk": 22
+  },
+  {
+    "fields": {
+      "codename": "change_apikey",
+      "name": "Can change api key",
+      "content_type": 8
+    },
+    "model": "auth.permission",
+    "pk": 23
+  },
+  {
+    "fields": {
+      "codename": "delete_apikey",
+      "name": "Can delete api key",
+      "content_type": 8
+    },
+    "model": "auth.permission",
+    "pk": 24
+  },
+  {
+    "fields": {
+      "codename": "add_refereeuserprofile",
+      "name": "Can add referee user profile",
+      "content_type": 9
+    },
+    "model": "auth.permission",
+    "pk": 25
+  },
+  {
+    "fields": {
+      "codename": "change_refereeuserprofile",
+      "name": "Can change referee user profile",
+      "content_type": 9
+    },
+    "model": "auth.permission",
+    "pk": 26
+  },
+  {
+    "fields": {
+      "codename": "delete_refereeuserprofile",
+      "name": "Can delete referee user profile",
+      "content_type": 9
+    },
+    "model": "auth.permission",
+    "pk": 27
+  },
+  {
+    "fields": {
+      "codename": "add_participant",
+      "name": "Can add participant",
+      "content_type": 10
+    },
+    "model": "auth.permission",
+    "pk": 28
+  },
+  {
+    "fields": {
+      "codename": "change_participant",
+      "name": "Can change participant",
+      "content_type": 10
+    },
+    "model": "auth.permission",
+    "pk": 29
+  },
+  {
+    "fields": {
+      "codename": "delete_participant",
+      "name": "Can delete participant",
+      "content_type": 10
+    },
+    "model": "auth.permission",
+    "pk": 30
+  },
+  {
+    "fields": {
+      "codename": "add_tournamentoptions",
+      "name": "Can add tournament options",
+      "content_type": 11
+    },
+    "model": "auth.permission",
+    "pk": 31
+  },
+  {
+    "fields": {
+      "codename": "change_tournamentoptions",
+      "name": "Can change tournament options",
+      "content_type": 11
+    },
+    "model": "auth.permission",
+    "pk": 32
+  },
+  {
+    "fields": {
+      "codename": "delete_tournamentoptions",
+      "name": "Can delete tournament options",
+      "content_type": 11
+    },
+    "model": "auth.permission",
+    "pk": 33
+  },
+  {
+    "fields": {
+      "codename": "add_tournament",
+      "name": "Can add tournament",
+      "content_type": 12
+    },
+    "model": "auth.permission",
+    "pk": 34
+  },
+  {
+    "fields": {
+      "codename": "change_tournament",
+      "name": "Can change tournament",
+      "content_type": 12
+    },
+    "model": "auth.permission",
+    "pk": 35
+  },
+  {
+    "fields": {
+      "codename": "delete_tournament",
+      "name": "Can delete tournament",
+      "content_type": 12
+    },
+    "model": "auth.permission",
+    "pk": 36
+  },
+  {
+    "fields": {
+      "codename": "add_round",
+      "name": "Can add round",
+      "content_type": 13
+    },
+    "model": "auth.permission",
+    "pk": 37
+  },
+  {
+    "fields": {
+      "codename": "change_round",
+      "name": "Can change round",
+      "content_type": 13
+    },
+    "model": "auth.permission",
+    "pk": 38
+  },
+  {
+    "fields": {
+      "codename": "delete_round",
+      "name": "Can delete round",
+      "content_type": 13
+    },
+    "model": "auth.permission",
+    "pk": 39
+  },
+  {
+    "fields": {
+      "codename": "add_match",
+      "name": "Can add match",
+      "content_type": 14
+    },
+    "model": "auth.permission",
+    "pk": 40
+  },
+  {
+    "fields": {
+      "codename": "change_match",
+      "name": "Can change match",
+      "content_type": 14
+    },
+    "model": "auth.permission",
+    "pk": 41
+  },
+  {
+    "fields": {
+      "codename": "delete_match",
+      "name": "Can delete match",
+      "content_type": 14
+    },
+    "model": "auth.permission",
+    "pk": 42
+  },
+  {
+    "fields": {
+      "codename": "set_result",
+      "name": "Set result",
+      "content_type": 14
+    },
+    "model": "auth.permission",
+    "pk": 43
+  },
+  {
+    "fields": {
+      "codename": "view_result",
+      "name": "View result",
+      "content_type": 14
+    },
+    "model": "auth.permission",
+    "pk": 44
+  },
+  {
+    "fields": {
+      "codename": "add_score",
+      "name": "Can add score",
+      "content_type": 15
+    },
+    "model": "auth.permission",
+    "pk": 45
+  },
+  {
+    "fields": {
+      "codename": "change_score",
+      "name": "Can change score",
+      "content_type": 15
+    },
+    "model": "auth.permission",
+    "pk": 46
+  },
+  {
+    "fields": {
+      "codename": "delete_score",
+      "name": "Can delete score",
+      "content_type": 15
+    },
+    "model": "auth.permission",
+    "pk": 47
+  },
+  {
+    "fields": {
+      "codename": "add_userobjectpermission",
+      "name": "Can add user object permission",
+      "content_type": 16
+    },
+    "model": "auth.permission",
+    "pk": 48
+  },
+  {
+    "fields": {
+      "codename": "change_userobjectpermission",
+      "name": "Can change user object permission",
+      "content_type": 16
+    },
+    "model": "auth.permission",
+    "pk": 49
+  },
+  {
+    "fields": {
+      "codename": "delete_userobjectpermission",
+      "name": "Can delete user object permission",
+      "content_type": 16
+    },
+    "model": "auth.permission",
+    "pk": 50
+  },
+  {
+    "fields": {
+      "codename": "add_groupobjectpermission",
+      "name": "Can add group object permission",
+      "content_type": 17
+    },
+    "model": "auth.permission",
+    "pk": 51
+  },
+  {
+    "fields": {
+      "codename": "change_groupobjectpermission",
+      "name": "Can change group object permission",
+      "content_type": 17
+    },
+    "model": "auth.permission",
+    "pk": 52
+  },
+  {
+    "fields": {
+      "codename": "delete_groupobjectpermission",
+      "name": "Can delete group object permission",
+      "content_type": 17
+    },
+    "model": "auth.permission",
+    "pk": 53
+  },
+  {
+    "fields": {
+      "username": "AnonymousUser",
+      "first_name": "",
+      "last_name": "",
+      "is_active": true,
+      "is_superuser": false,
+      "is_staff": false,
+      "last_login": "2015-07-19T13:27:07.310Z",
+      "groups": [
+        
+      ],
+      "user_permissions": [
+        
+      ],
+      "password": "",
+      "email": "",
+      "date_joined": "2015-07-19T13:27:07.310Z"
+    },
+    "model": "auth.user",
+    "pk": -1
+  },
+  {
+    "fields": {
+      "username": "ScoreRef",
+      "first_name": "Score",
+      "last_name": "Ref",
+      "is_active": true,
+      "is_superuser": false,
+      "is_staff": false,
+      "last_login": "2015-07-19T13:27:10.479Z",
+      "groups": [
+        
+      ],
+      "user_permissions": [
+        
+      ],
+      "password": "pbkdf2_sha256$15000$ya0PEyqJbjdQ$R6nwoZ\/Nbqfr6xveGOeN3Nbi6QsnH+nN3D3fkSmQ0Ls=",
+      "email": "scoreref@yahoo.com",
+      "date_joined": "2015-07-19T13:27:10.480Z"
+    },
+    "model": "auth.user",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "picture": "referees\/default.png",
+      "user": 1
+    },
+    "model": "core.refereeuserprofile",
+    "pk": 1
+  }
+]
+

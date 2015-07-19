@@ -1,0 +1,7 @@
+[run]
+source = webscoring
+		 core
+omit =
+        *core/tests*
+		*webscoring/tests*
+		*core/migrations*

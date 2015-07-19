@@ -15,18 +15,6 @@ class AnonymousGetAuthentication(BasicAuthentication):
             return True
         else:
             return super(AnonymousGetAuthentication, self).is_authenticated(request, **kwargs)
-            
-class AnonymousGetAuthorization(DjangoAuthorization):
-    """
-    Authorizes every authenticated user to perform GET, for all others
-    performs DjangoAuthorization.
-    """
-
-    def is_authorized(self, request, object=None):
-        if request.method == 'GET':
-            return True
-        else:
-            return True #request.user.has_perm('set_result', object)
 
 class UserResource(ModelResource):
     class Meta:
@@ -65,8 +53,6 @@ class TournamentResource(ModelResource):
         }           
 
 class ParticipantResource(ModelResource):
-    def can_update(self):
-        return False
     class Meta:
         always_return_data = True
         queryset = Participant.objects.all()

@@ -37,9 +37,8 @@ ALLOWED_HOSTS = []
 AUTH_PROFILE_MODULE = 'accounts.JudgeUserProfile'
 ANONYMOUS_USER_ID = -1
 
-
 # Application definition
-
+									
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
