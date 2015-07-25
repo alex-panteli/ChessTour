@@ -78,7 +78,7 @@ class RoundResource(ModelResource):
 class MatchResource(ModelResource):
     round = fields.ToOneField(RoundResource, 'round')
     participant_one = fields.ToOneField(ParticipantResource, 'participant_one',full=True)
-    participant_two = fields.ToOneField(ParticipantResource, 'participant_two',full=True)
+    participant_two = fields.ToOneField(ParticipantResource, 'participant_two',full=True,null=True)
     class Meta:
         always_return_data = True
         queryset = Match.objects.all()

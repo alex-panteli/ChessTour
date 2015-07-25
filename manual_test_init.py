@@ -1,5 +1,5 @@
 
-from core.models import Participant,Score,Tournament,RefereeUserProfile,Match,Round,TournamentOptions
+from core.models import Participant,Score,Tournament,RefereeUserProfile,Match,Round,TournamentRuleset
 from django.contrib.auth.models import User
 from guardian.shortcuts import assign_perm
 import datetime
@@ -47,15 +47,16 @@ ten = Participant.objects.create(full_name='Levon Aronian', country="AM", elo_ra
 ten.picture = "participants/levon_aronian.jpg"
 ten.save()
 
+admin = User.objects.create_superuser(username='admin',password='password', email='')
 
 referee_user = User.objects.create(username='ScoreRef',password='1234',email='scoreref@yahoo.com',first_name='Score',last_name='Ref')
 referee_user.set_password('1234')
 referee_user.save()
 
 referee = RefereeUserProfile.objects.create(user=referee_user)
-options = TournamentOptions.objects.create(numOfRounds=5,winPoints=1,drawPoints=0.5,byePoints=1)
+ruleset = TournamentRuleset.objects.create(numOfRounds=5,winPoints=1,drawPoints=0.5,byePoints=1)
 
-newtour = Tournament.objects.create(name="Scoreboard test tournament" , country="CY", referee=referee, date=datetime.datetime.strptime('2015-07-02', "%Y-%m-%d"), options = options)
+newtour = Tournament.objects.create(name="Scoreboard test tournament" , country="CY", referee=referee, date=datetime.datetime.strptime('2015-07-02', "%Y-%m-%d"), ruleset = ruleset)
 
 newtour.participants = Participant.objects.all()
 newtour.save()

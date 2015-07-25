@@ -93,8 +93,8 @@
   },
   {
     "fields": {
-      "model": "tournamentoptions",
-      "name": "tournament options",
+      "model": "tournamentruleset",
+      "name": "tournament ruleset",
       "app_label": "core"
     },
     "model": "contenttypes.contenttype",
@@ -526,8 +526,8 @@
   },
   {
     "fields": {
-      "codename": "add_tournamentoptions",
-      "name": "Can add tournament options",
+      "codename": "add_tournamentruleset",
+      "name": "Can add tournament ruleset",
       "content_type": 11
     },
     "model": "auth.permission",
@@ -535,8 +535,8 @@
   },
   {
     "fields": {
-      "codename": "change_tournamentoptions",
-      "name": "Can change tournament options",
+      "codename": "change_tournamentruleset",
+      "name": "Can change tournament ruleset",
       "content_type": 11
     },
     "model": "auth.permission",
@@ -544,8 +544,8 @@
   },
   {
     "fields": {
-      "codename": "delete_tournamentoptions",
-      "name": "Can delete tournament options",
+      "codename": "delete_tournamentruleset",
+      "name": "Can delete tournament ruleset",
       "content_type": 11
     },
     "model": "auth.permission",

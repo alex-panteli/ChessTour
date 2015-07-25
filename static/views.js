@@ -35,6 +35,7 @@ var AppView = Backbone.View.extend({
 		this.scoreview = new ScoreBoardView({collection : app.scores});
 		app.roundview = new RoundView({collection : app.rounds});
 	}
+	
 });
 
 var LoginView = Backbone.View.extend({
@@ -86,7 +87,10 @@ var LoginView = Backbone.View.extend({
 	},
 	
 	renderFailure: function() {
-		console.log('error logging in');
+		$('#error-output').addClass("col-xs-12 alert alert-danger text-center");
+		$('#error-output').attr('role',"alert");
+		$('#error-output').text("Login failed");
+
 	},
 	
 	getUser: function() {

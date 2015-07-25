@@ -29,3 +29,10 @@
   padding-right: 0;
   padding-left: 0;
 }
+
+@media (min-width: 768px) {
+	.fixed-panel {
+		overflow: auto;
+		max-height: 65vh;
+	}
+}
