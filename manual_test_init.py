@@ -57,7 +57,7 @@ referee_user.save()
 referee = RefereeUserProfile.objects.create(user=referee_user)
 ruleset = TournamentRuleset.objects.create(name='Small tournament',numOfRounds=5,winPoints=1,drawPoints=0.5,byePoints=1)
 
-newtour = Tournament.objects.create(name="Scoreboard test tournament" , country="CY", referee=referee, date=datetime.datetime.strptime('2015-07-02', "%Y-%m-%d"), ruleset = ruleset)
+newtour = Tournament.objects.create(name="London Chess Classic" , country="UK", referee=referee, date=datetime.datetime.strptime('2015-07-02', "%Y-%m-%d"), ruleset = ruleset)
 
 newtour.participants = Participant.objects.all()
 newtour.save()
