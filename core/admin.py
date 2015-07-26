@@ -1,4 +1,4 @@
-from django.contrib.admin import AdminSite, TabularInline, StackedInline
+from django.contrib.admin import AdminSite, TabularInline, StackedInline, ModelAdmin
 from django.contrib import admin
 from nested_inline.admin import NestedStackedInline, NestedModelAdmin
 from admin_enhancer import admin as enhanced_admin
@@ -7,13 +7,13 @@ from django.template.defaultfilters import escape
 from django.core.urlresolvers import reverse
 from django.utils.html import format_html
 
-class ModelAdminPlus(enhanced_admin.EnhancedModelAdminMixin, NestedModelAdmin):
+class ModelAdminPlus(enhanced_admin.EnhancedModelAdminMixin, ModelAdmin):
     def get_readonly_fields(self, request, obj=None):
         if obj and hasattr(self, 'noneditable_fields'): #If editing
             return self.readonly_fields + self.noneditable_fields
         return self.readonly_fields
 
-class MatchInline(enhanced_admin.EnhancedAdminMixin, NestedStackedInline):
+class MatchInline(enhanced_admin.EnhancedAdminMixin, StackedInline):
     model = Match
     can_delete = False
     verbose_name_plural = "Matches"

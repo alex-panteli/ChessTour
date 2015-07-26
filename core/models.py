@@ -6,6 +6,7 @@ from guardian.shortcuts import assign_perm
 from utilities import ModelDiffMixin
 from django.template.defaultfilters import escape
 from django.core.urlresolvers import reverse
+from django.db.models.signals import post_save,m2m_changed
 import random
 import math
 import networkx as netx
@@ -42,26 +43,25 @@ class TournamentRuleset(models.Model):
 class Tournament(models.Model):
     name = models.CharField(max_length=250,blank=False)
     country = CountryField()
-    referee = models.OneToOneField(RefereeUserProfile)
+    referee = models.ForeignKey(RefereeUserProfile)
     participants = models.ManyToManyField(Participant)
     date = models.DateField()
-    ruleset = models.OneToOneField(TournamentRuleset)
+    ruleset = models.ForeignKey(TournamentRuleset)
     def __unicode__(self):
         toString = u'{} {} {}'.format(self.name,self.country.name,self.date.year)
         return toString
 
 @transaction.atomic        
-def create_first_round(instance, created, raw, **kwargs):
-    if instance.participants.count() == 0:
-        return
-    if instance.round_set.count() == 0:
-        #Create 0 score for all participants
-        for participant in instance.participants.all():
-            Score.objects.create(tournament = instance, participant = participant, score=0, rating_delta=0)
-        generateNextRound(instance, 0)
-        instance.save()
+def create_first_round(sender, instance, action, reverse, *args, **kwargs):
+    if action == 'post_add' and not reverse:
+        if instance.round_set.count() == 0:
+            #Create 0 score for all participants and first round
+            for participant in instance.participants.all():
+                Score.objects.create(tournament = instance, participant = participant, score=0, rating_delta=0)
+            generateNextRound(instance, 0)
+            instance.save()
 
-models.signals.post_save.connect(create_first_round, sender=Tournament, dispatch_uid='create_first_round')
+m2m_changed.connect(create_first_round, sender=Tournament.participants.through, dispatch_uid='create_first_round')
 
 
 class Round(models.Model):
@@ -131,7 +131,7 @@ def assign_rights(instance, created, raw, **kwargs):
         assign_perm('view_result', referee_user, instance)
         
 
-models.signals.post_save.connect(assign_rights, sender=Match, dispatch_uid='assign_read_rights')
+post_save.connect(assign_rights, sender=Match, dispatch_uid='assign_read_rights')
 
 @transaction.atomic     
 def updateStandings(participant_one,participant_two,tournament, result):
