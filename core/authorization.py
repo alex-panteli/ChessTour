@@ -7,6 +7,7 @@ from guardian.core import ObjectPermissionChecker
 
 logger = logging.getLogger(__name__)
 
+#Copied from https://gist.github.com/7wonders/6557760
 
 class GuardianAuthorization(DjangoAuthorization):
     """
