@@ -1,11 +1,12 @@
 ChessTour
 =============
 
-ChessTour a sample Django/BackBone.js project for managing chess tournament pairing and scoring. 
+ChessTour is a sample Django/BackBone.js project for managing chess tournament pairing and scoring. 
 
 Requirements
 ------------
-python 2.7.6+ environment with pip installed
+python 2.7.6+ environment with pip installed.
+If not running in new virtualenv please check requirements.txt as pip install will not override existing installations. Django 1.7 is a requirement in this case as some of the dependencies are not compatible with Django 1.8 yet.
 
 
 Installation/Deployment
