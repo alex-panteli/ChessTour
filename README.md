@@ -14,6 +14,7 @@ Installation/Deployment
 Just run deploy-chesstour script (shell or bat) and it will install all dependencies, sample data (local sqlite3 file) and start the django developemt server listening to default port 8000.
 
 Sample referee profile credentials: jdoe / 1234
+
 Sample admin credentials          : admin / password
 
 (Django) Tests are run as usual with
