@@ -1,5 +1,6 @@
 from django.forms.models import model_to_dict
 
+#Copied from https://gist.github.com/jpadilla/4973958
 
 class ModelDiffMixin(object):
     """
