@@ -38,22 +38,30 @@ AUTH_PROFILE_MODULE = 'accounts.JudgeUserProfile'
 ANONYMOUS_USER_ID = -1
 
 # Application definition
-									
+                                    
 INSTALLED_APPS = (
+	'django_admin_bootstrapped',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-	'django_countries',
-	'tastypie',
-	'bootstrap3',
-	'sekizai',
-	'core',
-	'webscoring',
-	'guardian',
-	
+    'django_countries',
+    'tastypie',
+    'bootstrap3',
+    'sekizai',
+    'nested_inline',
+	'admin_enhancer',
+    'core',
+    'webscoring',
+    'guardian',
+    
+)
+
+TEMPLATE_CONTEXT_PROCESSORS  = (
+	'django.contrib.messages.context_processors.messages',
+	'django.contrib.auth.context_processors.auth',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -64,6 +72,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'core.ExceptionLoggingMiddleware'
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -73,6 +82,7 @@ AUTHENTICATION_BACKENDS = (
 
 ROOT_URLCONF = 'tournament.urls'
 
+TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -84,7 +94,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-				'sekizai.context_processors.sekizai',
+                'sekizai.context_processors.sekizai',
             ],
         },
     },

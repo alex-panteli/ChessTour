@@ -28,6 +28,7 @@ score_api.register(RoundResource())
 score_api.register(TournamentResource())
 score_api.register(ScoreResource())
 score_api.register(RefereeLoginResource())
+admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),

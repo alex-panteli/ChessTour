@@ -1,8 +1,11 @@
 from django.db import models,transaction
 from django_countries.fields import CountryField
 from django.contrib.auth.models import User
+from django.utils import timezone
 from guardian.shortcuts import assign_perm
 from utilities import ModelDiffMixin
+from django.template.defaultfilters import escape
+from django.core.urlresolvers import reverse
 import random
 import math
 import networkx as netx
@@ -18,7 +21,7 @@ class RefereeUserProfile(models.Model):
 
 class Participant(models.Model):
     #Max length Based on UK Government Data Standards Catalogue
-    full_name = models.CharField(max_length=70)
+    full_name = models.CharField(max_length=70,blank=False)
     country = CountryField()
     elo_rating = models.PositiveIntegerField()
     picture = models.ImageField(upload_to='participants',default='participants/default.png')
@@ -27,24 +30,24 @@ class Participant(models.Model):
         return u'{} - {} [{:,}]'.format(self.full_name, self.country, self.elo_rating)
 
 class TournamentRuleset(models.Model):
-    name = models.CharField(max_length=250)
-    numOfRounds = models.PositiveIntegerField()
-    winPoints = models.FloatField(default=1)
-    drawPoints = models.FloatField(default=0.5)
-    byePoints = models.FloatField(default=1)
+    name = models.CharField(max_length=250,blank=False)
+    numOfRounds = models.PositiveIntegerField(verbose_name='Number of rounds')
+    winPoints = models.FloatField(default=1, verbose_name='Points per win')
+    drawPoints = models.FloatField(default=0.5, verbose_name='Points per draw')
+    byePoints = models.FloatField(default=1, verbose_name='Points per bye')
     def __unicode__(self):
-        toString = u'{} : {} Rounds, Points [{}-{}] Bye:[{}]'.format(self.name,self.numOfRounds,self.winPoints,self.drawPoints,self.byePoints)
+        toString = u'{}'.format(self.name)
         return toString
         
 class Tournament(models.Model):
-    name = models.CharField(max_length=250)
+    name = models.CharField(max_length=250,blank=False)
     country = CountryField()
-    referee = models.ForeignKey(RefereeUserProfile)
+    referee = models.OneToOneField(RefereeUserProfile)
     participants = models.ManyToManyField(Participant)
     date = models.DateField()
-    ruleset = models.ForeignKey(TournamentRuleset)
+    ruleset = models.OneToOneField(TournamentRuleset)
     def __unicode__(self):
-        toString = u'{} {} - {}. REF: {}'.format(self.name,self.date,self.country,self.referee)
+        toString = u'{} {} {}'.format(self.name,self.country.name,self.date.year)
         return toString
 
 @transaction.atomic        
@@ -65,10 +68,11 @@ class Round(models.Model):
     tournament = models.ForeignKey(Tournament)
     round_number = models.PositiveIntegerField()
     is_current = models.BooleanField(default=False)
+    completed_on = models.DateTimeField(null=True)
     def __unicode__(self):
-        toString = u'Round {} of {} :'.format(self.round_number,self.tournament)
-        toString += u'\n'.join([str(match) for match in self.match_set.all()])
+        toString = u'Round #{} of {}'.format(self.round_number,self.tournament)
         return toString
+        
     
 class Match(models.Model,ModelDiffMixin):
 
@@ -79,9 +83,9 @@ class Match(models.Model,ModelDiffMixin):
             )
             
     RESULT_CHOICES = (
-        ('1' , 'One'),
+        ('1' , 'White won'),
         ('X' , 'Draw'),
-        ('2' , 'Two'),
+        ('2' , 'Black won'),
     )
     round = models.ForeignKey(Round)
     participant_one = models.ForeignKey(Participant,related_name='player_one')
@@ -109,6 +113,9 @@ class Match(models.Model,ModelDiffMixin):
                 if remainingMatches.count() == 1 and remainingMatches[0] == self and self.result:
                     generateNextRound(self.round.tournament, self.round.round_number)
                     self.round.is_current = False
+                    self.round.completed_on = timezone.now()
+                    self.round.save()
+                    
         super(Match, self).save(*args, **kwargs)
     
     def __unicode__(self):
@@ -166,6 +173,78 @@ class Score(models.Model):
     def __unicode__(self):
         return u'{} : {}\n , elo delta: {}'.format(self.participant, self.score,self.rating_delta)
     
+def getColors(player_one,player_two,tournament):
+
+    prevColors = []
+    rounds = tournament.round_set.prefetch_related('match_set').order_by('-round_number')[1:]
+    numRoundsPlayed = rounds.count()
+    
+    #First round
+    if  numRoundsPlayed == 0:
+        return (player_one, player_two)
+    #We only need to check last two rounds      
+    for round in rounds[:min(numRoundsPlayed,2)]:
+        matches = round.match_set
+        roundColors = ['white' if matches.filter(participant_one=player_one).exists() else  'black' , 'white' if matches.filter(participant_one=player_two).exists() else  'black']
+        #Alternate colours if possible
+        if roundColors[0] != roundColors[1]:
+            if roundColors[0] == 'white':
+                return (player_two, player_one)
+            return (player_one, player_two)
+        
+        #Cannot have the same color three times in a row
+        consecColors = map(eq,roundColors,prevColors)
+        if True in consecColors:
+            player = consecColors.index(True)
+            color = invColor(roundColors[player])
+            if color == 'white' and player == 1:
+                return (player_two, player_one)
+            if color == 'white' and player == 0:
+                return (player_one, player_two)
+            if color == 'black' and player == 1:
+                return (player_one, player_two)
+            if color == 'black' and player == 0:
+                return (player_two, player_one)
+        prevColors = roundColors    
+    
+    #Only one round played and in both matches both players had the same colour, return the original pairing  
+    return (player_one,player_two)
+
+def invColor(color):
+    return 'black' if color is 'white' else 'white'
+    
+''' 
+This license applies to all files in this repository that do not have 
+another license otherwise indicated.
+
+Copyright (c) 2014, Jeff Hoogland
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the <organization> nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+'''
+'''
+Modified version of main pairing function from PyPair (https://github.com/JeffHoogland/pypair)
+'''
 def generateNextRound(tournament,current_round_number):
     currentStandings = Score.objects.filter(tournament=tournament).select_related('participant')
     players = tournament.participants
@@ -253,43 +332,4 @@ def generateNextRound(tournament,current_round_number):
                 while len(pointLists[points]) > 0:
                     pointLists[nextPoints].append(pointLists[points].pop(0))
                     
-def getColors(player_one,player_two,tournament):
-
-    prevColors = []
-    rounds = tournament.round_set.prefetch_related('match_set').order_by('-round_number')[1:]
-    numRoundsPlayed = rounds.count()
-    
-    #First round
-    if  numRoundsPlayed == 0:
-        return (player_one, player_two)
-    #We only need to check last two rounds      
-    for round in rounds[:min(numRoundsPlayed,2)]:
-        matches = round.match_set
-        roundColors = ['white' if matches.filter(participant_one=player_one).exists() else  'black' , 'white' if matches.filter(participant_one=player_two).exists() else  'black']
-        #Alternate colours if possible
-        if roundColors[0] != roundColors[1]:
-            if roundColors[0] == 'white':
-                return (player_two, player_one)
-            return (player_one, player_two)
-        
-        #Cannot have the same color three times in a row
-        consecColors = map(eq,roundColors,prevColors)
-        if True in consecColors:
-            player = consecColors.index(True)
-            color = invColor(roundColors[player])
-            if color == 'white' and player == 1:
-                return (player_two, player_one)
-            if color == 'white' and player == 0:
-                return (player_one, player_two)
-            if color == 'black' and player == 1:
-                return (player_one, player_two)
-            if color == 'black' and player == 0:
-                return (player_two, player_one)
-        prevColors = roundColors    
-    
-    #Only one round played and in both matches both players had the same colour, return the original pairing  
-    return (player_one,player_two)
-
-def invColor(color):
-    return 'black' if color is 'white' else 'white'
     

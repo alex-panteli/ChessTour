@@ -2,7 +2,7 @@ from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
 from tastypie.authentication import BasicAuthentication
 from tastypie.authorization import DjangoAuthorization,Authorization
 from tastypie import fields, utils
-from core.models import Participant,Match,Round,Tournament,Score,RefereeUserProfile
+from core.models import Participant,Match,Round,Tournament,Score,RefereeUserProfile,TournamentRuleset
 from core.authorization import GuardianAuthorization
 from django.contrib.auth.models import User
 
@@ -40,9 +40,17 @@ class RefereeResource(ModelResource):
         queryset = RefereeUserProfile.objects.all()
         allowed_methods = ['get']
         resource_name = 'referee'
+        
+class TournamentRulesetResource(ModelResource):
+    class Meta:
+        always_return_data = True
+        queryset = TournamentRuleset.objects.all()
+        allowed_methods = ['get']
+        resource_name = 'ruleset'
       
 class TournamentResource(ModelResource):
     referee = fields.ToOneField(RefereeResource, 'referee', full=True)
+    ruleset = fields.ToOneField(TournamentRulesetResource, 'ruleset', full=True)
     class Meta:
         always_return_data = True
         queryset = Tournament.objects.all()

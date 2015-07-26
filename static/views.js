@@ -3,7 +3,6 @@ var AppView = Backbone.View.extend({
 	
 	events: {
         "change #tournament-selector": "tournamentSelected"
-		//change round
 	},
   
 	tournamentSelected: function(event){
@@ -13,6 +12,7 @@ var AppView = Backbone.View.extend({
 	
 	initialize: function(){
 		var self=this;
+		app.refresh = this.refresh
 		app.tournaments = new TournamentList();
 		this.tournamentview = new TournamentsView({ collection: app.tournaments });
 		app.tournaments.fetch().done(function(){
@@ -25,7 +25,7 @@ var AppView = Backbone.View.extend({
 	},
 	
 	changeTournament : function(tournId){
-		console.log('displaying scoreboard for' + tournId);
+		this.currTour = app.tournaments.get(tournId); 
 		app.scores = new ScoreList({tournament_id : tournId});
 		app.rounds = new RoundList({tournament_id : tournId});
 		if(this.scoreview)
@@ -34,6 +34,14 @@ var AppView = Backbone.View.extend({
 			this.roundview.clean();
 		this.scoreview = new ScoreBoardView({collection : app.scores});
 		app.roundview = new RoundView({collection : app.rounds});
+	},
+	
+	refresh : function(){
+		app.scores.fetch({reset: true});
+	    //Check if there's a new round
+		if (app.roundview.wasLastMatch()){
+			app.rounds.fetch({reset: true});
+		}
 	}
 	
 });
@@ -53,7 +61,6 @@ var LoginView = Backbone.View.extend({
 		
 		var usernameStr = $('#username-field').val();
 		var passwordStr = $('#password-field').val();
-		console.log(usernameStr + passwordStr);
 		this.user.credentials = {
 			username: usernameStr,
 			password: passwordStr
@@ -106,13 +113,11 @@ var TournamentsView = Backbone.View.extend({
 
   initialize: function(){
     this.listenTo(app.tournaments,'update', this.render);
-	//this.listenTo(app.tournaments,'sync', this.render);
   },
   
   template: _.template($("#tournament_select_template").html()),
   
   render: function(){
-	  console.log('rendering tournaments');
 	    var $el = $(this.el);
         $el.html(this.template({ tournaments: app.tournaments.toJSON()}));
 		
@@ -125,14 +130,13 @@ var ScoreBoardView = Backbone.View.extend({
   
   initialize: function(){
 	this.listenTo(this.collection,'update', this.render);
-	//this.listenTo(this.collection,'sync', this.render);
+	this.listenTo(this.collection,'reset', this.render);
 	this.collection.fetch();
 	
   },
   
   render: function(){
 	var $el = $(this.el);
-	console.log('rendering scoreboard');
 	$el.html('');
 	this.collection.each(function(listItem) {
 		var item;
@@ -155,8 +159,7 @@ var ScoreView = Backbone.View.extend({
 	template: _.template($("#score_template").html()),
 	
 	initialize: function(){
-		this.listenTo(this.model,'change', this.render);
-		//this.listenTo(this.model,'sync', this.render);
+		
 	},
 	
 	render: function(){
@@ -198,12 +201,13 @@ var RoundView =  Backbone.View.extend({
 	
 	initialize: function(){
 			this.listenTo(this.collection,'update', this.loadRound);
-			//this.listenTo(this.collection,'sync', this.render);
+			this.listenTo(this.collection,'reset', this.loadRound);
 			this.collection.fetch();
 	},
 	
 	loadRound: function()
 	{
+		this.cleanItems();
 		this.current = (this.collection.where({ is_current : true }))[0];
 		var maxRound = this.collection.max(function(model) {
 			return model.get("round_number");
@@ -222,24 +226,59 @@ var RoundView =  Backbone.View.extend({
 	template: _.template($("#round_template").html()),
 	
 	render: function(){
-		var $el = $(this.el);
-		console.log('rendering matchboard');
-		$el.html('');
-		$el.html(this.template(this.current.toJSON()));
-		var matchhtml = '';
-		this.matches.each(function(listItem) {
-			var item;
-			item = new MatchView({ model: listItem });
-			$('#match-list-container').append(item.render().el);
-		});
+		if('items' in this && this.items.length != 0) {
+			for ( var i=0,  tot=this.items.length; i < tot; i++){
+					this.items[i].render();
+			}
+		}
+		else
+		{		
+			var $el = $(this.el);
+			$el.html('');
+			$el.html(this.template(this.current.toJSON()));
+			var self = this;
+			this.matches.each(function(listItem) {
+				var item;
+				item = new MatchView({ model: listItem });
+				$('#match-list-container').append(item.render().el);
+				self.addMatch(item);
+			});
+		}
 		
 		return this;
+	},
+	
+	addMatch: function(match){
+		if(!('items' in this)){
+			this.items = [];
+		}
+		this.items.push(match);
+	},
+	
+	wasLastMatch: function(){
+		var unplayedMatches = this.matches.where({ result : '' });
+		if (unplayedMatches.length != 0){
+			return false;
+		}
+		return true;
 	},
 	
 	clean: function(){
 	  this.undelegateEvents();
 	  this.stopListening();
+	},
+	
+	cleanItems: function(){
+	  if(!('items' in this)) {
+		  return;
+	  }
+	  for ( var i=0,  tot=this.items.length; i < tot; i++){
+		  this.items[i].undelegateEvents();
+		  this.items[i].stopListening();
+	  }
+	  this.items = []
 	}
+	
 });
 
 
@@ -252,25 +291,21 @@ var MatchView = Backbone.View.extend({
   },
 
   saveResult: function( event ){
-      // Button clicked, you can access the element that was clicked with event.currentTarget
-      console.log('saving result');
 	  
 	  if(app.loginView.isAuthenticated())
 	  {
 		    var elName = "#result-selector-" + this.model.get('id');
 			this.model.credentials = app.loginView.user.credentials;
-			console.log($(elName).val());
-			this.model.set({ result :  $(elName).val() });
+			this.model.save({ result :  $(elName).val()},{wait: true});
 	  }
 	  
   },
   
    initialize: function(){
 		this.listenTo(this.model,'change', this.render);
-		//this.listenTo(this.model,'sync', this.render);
 		this.listenTo(this.model,"change:result", function(model){
-		  model.save();
-		});
+		  app.refresh();
+		});		  
    },
    
    template: _.template($("#match_template").html()),
@@ -285,20 +320,3 @@ var MatchView = Backbone.View.extend({
         return this;
   }
 });
-
-/*
-var TournamentView = Backbone.View.extend({
-  tagName: 'option',
-  initialize: function(){
-    this.model.on('change', this.render, this);
-  },
-  render: function(){
-	  var $el = $(this.el);
-      $el.data('value', this.model.get('id'));
-      
-      // Load the compiled HTML into the Backbone "el"
-      $el.html( this.model.get('name') );
-	  return this;
-  },
-});
-*/

@@ -49,31 +49,27 @@ ten.save()
 
 admin = User.objects.create_superuser(username='admin',password='password', email='')
 
-referee_user = User.objects.create(username='ScoreRef',password='1234',email='scoreref@yahoo.com',first_name='Score',last_name='Ref')
+referee_user = User.objects.create(username='jdoe',password='1234',email='jdoe@somemail.com',first_name='John',last_name='Doe')
 referee_user.set_password('1234')
 referee_user.save()
 
 referee = RefereeUserProfile.objects.create(user=referee_user)
-ruleset = TournamentRuleset.objects.create(numOfRounds=5,winPoints=1,drawPoints=0.5,byePoints=1)
+ruleset = TournamentRuleset.objects.create(name='Small tournament',numOfRounds=5,winPoints=1,drawPoints=0.5,byePoints=1)
 
 newtour = Tournament.objects.create(name="Scoreboard test tournament" , country="CY", referee=referee, date=datetime.datetime.strptime('2015-07-02', "%Y-%m-%d"), ruleset = ruleset)
 
 newtour.participants = Participant.objects.all()
 newtour.save()
 
-
-Match.objects.all()
 anonymous_user = User.objects.get(id=-1)
 x = [assign_perm('set_result', referee_user, match) for match in Match.objects.all()]
 y = [assign_perm('view_result', referee_user, match) for match in Match.objects.all()]
 z = [assign_perm('view_result', anonymous_user, match) for match in Match.objects.all()]
 
-for i in range(1,6):
+for i in range(1,3):
     for match in Match.objects.filter(round__round_number = i):
         match.result = '1'
         match.save()
-    Round.objects.filter(round_number=i)
-    Score.objects.filter(tournament = newtour)
 
 
     

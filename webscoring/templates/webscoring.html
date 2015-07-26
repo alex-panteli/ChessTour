@@ -52,7 +52,7 @@
 									disabled
 								<% } %>
 								"><i class="fa fa-chevron-right"></i></button></td>
-								<td><h3>&nbsp;Round <%= round_number %>/<%= max_round %></h3></td>
+								<td><h3>&nbsp;Round <%= round_number %></h3></td>
 							  </tr>
 							</tbody>
 						  </table>							
@@ -84,7 +84,7 @@
 			</div>
 		</div>
 		</div>
-		
+		<% if (participant_two) { %>
 		<div class="col-xs-2 justified"> <h2>VS</h2> </div>
 
 		<div class="col-xs-5">
@@ -104,6 +104,7 @@
 			</div>
 		</div>
 		</div>
+		<% } %>
 		
 		
 	</div>
