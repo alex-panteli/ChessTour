@@ -3,6 +3,7 @@ from core.models import Participant,Score,Tournament,RefereeUserProfile,Match,Ro
 from django.contrib.auth.models import User
 from guardian.shortcuts import assign_perm
 import datetime
+import random
 
 
 
@@ -68,7 +69,7 @@ z = [assign_perm('view_result', anonymous_user, match) for match in Match.object
 
 for i in range(1,3):
     for match in Match.objects.filter(round__round_number = i):
-        match.result = '1'
+        match.result = random.choice(['1','X','2'])
         match.save()
 
 

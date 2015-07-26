@@ -194,21 +194,25 @@ var RoundView =  Backbone.View.extend({
 		if ( (currentRound + increment <= maxRoundNum) && (currentRound + increment >= 1))
 		{
 			this.current = (this.collection.where({ round_number : currentRound + increment }))[0];
-			this.current.set({max_round : maxRoundNum});
-			this.loadMatches(this.current.get('id'));
+			this.loadRound();
 		}
 	},
 	
 	initialize: function(){
-			this.listenTo(this.collection,'update', this.loadRound);
-			this.listenTo(this.collection,'reset', this.loadRound);
+			this.listenTo(this.collection,'update', this.loadCurrentRound);
+			this.listenTo(this.collection,'reset', this.loadCurrentRound);
 			this.collection.fetch();
+	},
+	
+	loadCurrentRound: function()
+	{
+		this.current = (this.collection.where({ is_current : true }))[0];
+		this.loadRound();
 	},
 	
 	loadRound: function()
 	{
-		this.cleanItems();
-		this.current = (this.collection.where({ is_current : true }))[0];
+		this.cleanItems();		
 		var maxRound = this.collection.max(function(model) {
 			return model.get("round_number");
 		});
